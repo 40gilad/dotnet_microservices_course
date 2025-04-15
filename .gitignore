@@ -1,0 +1,84 @@
+# .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vscode/
+.vs/
+*.dbmdl
+*.psess
+*.vsp
+*.vspx
+*.vspscc
+*.vssscc
+*.cache
+*.log
+*.pdb
+
+# Rider
+.idea/
+
+# ASP.NET secrets
+**/secrets.json
+
+# User-specific files
+*.swp
+*.bak
+*.tmp
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+
+# Build results
+*.dll
+*.exe
+
+# Web (wwwroot)
+wwwroot/dist/
+wwwroot/node_modules/
+
+# gRPC & Protobuf
+Generated/
+**/*.pb.cs
+**/*.grpc.cs
+
+# Entity Framework
+Migrations/
+
+# Database (optional)
+*.mdf
+*.ldf
+*.db
+*.sql
+
+# Docker (optional if you're building containers locally)
+**/docker-compose.override.yml
+**/.docker/
+
+# Logs
+*.log
+logs/
+
+# Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+# Global JSON file (only ignore if auto-generated)
+# global.json
+
+# Others
+.env
+.env.*
+
+# IDE-specific (just in case)
+*.ncrunch*
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
