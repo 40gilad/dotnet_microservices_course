@@ -14,17 +14,19 @@ namespace WebApplication1.Data
         }
         public void CreatePlatform(Platform p)
 		{
-			throw new NotImplementedException();
+			if (p == null)
+				throw new ArgumentNullException(nameof(p));
+			_context.Platforms.Add(p);
 		}
 
 		public IEnumerable<Platform> GetAll()
 		{
-			throw new NotImplementedException();
+			return _context.Platforms.ToList();
 		}
 
 		public Platform GetPlatformById(int id)
 		{
-			throw new NotImplementedException();
+			return _context.Platforms.FirstOrDefault(p => p.Id == id);
 		}
 
 		public bool SaveChanges()
