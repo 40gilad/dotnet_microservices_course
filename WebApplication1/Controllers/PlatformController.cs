@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Data;
 using WebApplication1.DTOs;
 using WebApplication1.Models;
+using WebApplication1.SyncDataServices.Http;
 
 namespace WebApplication1.Controllers
 {
@@ -12,10 +13,16 @@ namespace WebApplication1.Controllers
 	{
         private readonly IMapper _mapper;
         private readonly IPlatformRepo _repository;
-        public PlatformController(IPlatformRepo repository,IMapper mapper)
+		private readonly ICommandDataClient _commandDataClient;
+
+		public PlatformController(
+            IPlatformRepo repository,
+            IMapper mapper,
+            ICommandDataClient commandDataClient)
         {
 			_mapper = mapper;
             _repository = repository;
+            _commandDataClient = commandDataClient;
 		}
             
         [HttpGet]
@@ -37,7 +44,7 @@ namespace WebApplication1.Controllers
 		}
 
         [HttpPost]
-        public ActionResult<PlatformReadDto> CreatePlatform(PlatformCreateDto p)
+        public async Task<ActionResult<PlatformReadDto>> CreatePlatform(PlatformCreateDto p)
         {
             Console.WriteLine("--> Create Platform...");
             var platform = _mapper.Map<Platform>(p);
@@ -45,6 +52,16 @@ namespace WebApplication1.Controllers
             _repository.SaveChanges();
 
             var ret_platform = _mapper.Map<PlatformReadDto>(platform);
+
+            try
+            {
+                Console.WriteLine(_commandDataClient);
+                await _commandDataClient.SendPatformCommand(ret_platform);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"CreatePlatform:\t--> Could not send synchrunisly{ex.Message}");
+            }
             return CreatedAtRoute(nameof(GetPlatformById),new {Id= ret_platform.Id}, ret_platform);
 		}
 	}
