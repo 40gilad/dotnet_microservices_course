@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.SyncDataServices.Http;
 using Microsoft.Extensions.Configuration;
+using WebApplication1.AsyncDataServices;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,7 @@ else
 		options.UseInMemoryDatabase("InMem"));
 }
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
+builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 builder.Services.AddHttpClient<ICommandDataClient, CommandDataClient>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();

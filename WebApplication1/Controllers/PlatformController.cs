@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication1.AsyncDataServices;
 using WebApplication1.Data;
 using WebApplication1.DTOs;
 using WebApplication1.Models;
@@ -14,15 +15,18 @@ namespace WebApplication1.Controllers
         private readonly IMapper _mapper;
         private readonly IPlatformRepo _repository;
 		private readonly ICommandDataClient _commandDataClient;
+		private readonly IMessageBusClient _messageBusClient;
 
 		public PlatformController(
             IPlatformRepo repository,
             IMapper mapper,
-            ICommandDataClient commandDataClient)
+            ICommandDataClient commandDataClient,
+            IMessageBusClient messageBusClient)
         {
 			_mapper = mapper;
             _repository = repository;
             _commandDataClient = commandDataClient;
+			_messageBusClient = messageBusClient;
 		}
             
         [HttpGet]
@@ -53,6 +57,7 @@ namespace WebApplication1.Controllers
 
             var ret_platform = _mapper.Map<PlatformReadDto>(platform);
 
+            // Send Sync Message
             try
             {
                 Console.WriteLine(_commandDataClient);
@@ -60,9 +65,22 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"CreatePlatform:\t--> Could not send synchrunisly{ex.Message}");
+                Console.WriteLine($"CreatePlatform:\t--> Could not send synchrunisly {ex.Message}");
             }
-            return CreatedAtRoute(nameof(GetPlatformById),new {Id= ret_platform.Id}, ret_platform);
+
+			// Send Async Message
+			try
+			{
+				var publish_platform = _mapper.Map<PlatformPublishedDto>(ret_platform);
+                publish_platform.Event = "Platform_Published";
+                _messageBusClient.PublishNewPlatform(publish_platform);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"CreatePlatform:\t--> Could not send Asynchrunisly {ex.Message}");
+			}
+
+			return CreatedAtRoute(nameof(GetPlatformById),new {Id= ret_platform.Id}, ret_platform);
 		}
 	}
 }

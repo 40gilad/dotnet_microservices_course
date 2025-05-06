@@ -10,6 +10,7 @@ namespace WebApplication1.Profiles
         {
             CreateMap<PlatformCreateDto, Platform>();
             CreateMap<Platform, PlatformReadDto>();
+            CreateMap<PlatformReadDto, PlatformPublishedDto>();
         }
     }
 }
