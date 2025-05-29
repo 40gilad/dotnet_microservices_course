@@ -15,9 +15,6 @@ namespace CommandsService.Data
 		{
 			if (command == null)
 				throw new ArgumentNullException(nameof(command));
-
-			//if (!PlatformExist(platformId))
-			//	throw new InvalidOperationException($"platformId {platformId} does not exist!");
 			
 			command.PlatformId= platformId;
 			_context.Commands.Add(command);
@@ -30,7 +27,7 @@ namespace CommandsService.Data
 			_context.Platforms.Add(plat);
 		}
 
-		bool ExternalPlatformExists(int externalPlatformId)
+		public bool ExternalPlatformExists(int externalPlatformId)
 		{
 			return (_context.Platforms.Any(p => p.ExternalId == externalPlatformId));
 		}
@@ -63,5 +60,6 @@ namespace CommandsService.Data
 		{
 			return (_context.SaveChanges()>=0);
 		}
+
 	}
 }

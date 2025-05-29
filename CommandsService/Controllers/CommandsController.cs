@@ -54,10 +54,11 @@ namespace CommandsService.Controllers
 				return BadRequest($"{nameof(c)}");
 
 			Console.WriteLine("--> Creating command");
-			_repository.CreateCommand(platformId,_mapper.Map<Command>(c));
+			var command = _mapper.Map<Command>(c);
+			_repository.CreateCommand(platformId, command);
 			_repository.SaveChanges();
 
-			var commandReadDto = _mapper.Map<CommandReadDto>(c);
+			var commandReadDto = _mapper.Map<CommandReadDto>(command);
 			return CreatedAtRoute(nameof(GetCommandForPlatform),
 				new
 				{
