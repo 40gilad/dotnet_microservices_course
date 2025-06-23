@@ -4,6 +4,9 @@ using WebApplication1.Data;
 using WebApplication1.SyncDataServices.Http;
 using Microsoft.Extensions.Configuration;
 using WebApplication1.AsyncDataServices;
+using WebApplication1.SyncDataServices.Grpc;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +28,7 @@ else
 }
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
 builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
+builder.Services.AddGrpc();
 builder.Services.AddHttpClient<ICommandDataClient, CommandDataClient>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
@@ -46,6 +50,12 @@ Console.WriteLine($"-->CommandService Endpoint: {builder.Configuration["CommandS
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<GrpcPlatformService>();
+
+app.MapGet("/protos/platforms.proto", async context =>
+{
+	await context.Response.WriteAsync(File.ReadAllText("protos/platforms.proto"));
+});
 
 PrepDb.PrepPopulation(app,builder.Environment.IsProduction());
 
