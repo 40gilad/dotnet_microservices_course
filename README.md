@@ -25,11 +25,11 @@ This diagram illustrates how the microservices are deployed in a Kubernetes clus
 
 - ✅ Two .NET Microservices with REST APIs
 - ✅ Dedicated PostgreSQL databases for each service
-- ✅ API Gateway (Ocelot) for routing
+- ✅ API Gateway for routing
 - ✅ Synchronous service communication via HTTP and gRPC
 - ✅ Asynchronous messaging using RabbitMQ
-- ✅ Docker-based local development
-- ✅ Kubernetes manifests for cloud-native deployment
+- ✅ Docker
+- ✅ Kubernetes
 
 ---
 
